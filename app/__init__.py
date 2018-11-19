@@ -37,6 +37,11 @@ def create_app(config_name):
     #Registering the blueprint
     from.main import main as main_blueprint
     app.register_blueprint(main_blueprint)
+    app.debug = True
+    app.config.update(dict(
+    SECRET_KEY='01570936bd6b231dd1e1037bb224cd'
+    # WTF_CSRF_SECRET_KEY= "a csrf secret key"
+))
 
     #setting config
     # from .request import configure_request
