@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
-{% import 'macros.html' as macro%}
 
-<!-- Styles block -->
+
 {% block styles%}
     {{ super() }}
     <link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}">
@@ -14,16 +13,47 @@
 {% endblock %}
 
 {% block content %}
-<div class="jumbotron">
-</div>
-<div class="text-center">
-<a href="/post" class="btn btn-danger btn-lg">Create Pitch</a>
-</div>
-<br>
 
-  {% for pitch in pitches  %}
-  <!-- <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-       <div class="panel panel-default">
+  <div class="row">
+    <!-- displaying Username -->
+    <div id="bio"class="col-md-4">
+      <h3> {{user.username | capitalize}}</h3>
+      <!-- Displaying user bio -->
+      {% if user.bio %}
+        <p>{{user.bio}}</p>
+      {% else %}
+        <p> {{user.username|capitalize}} has no bio </p>
+      {% endif %}
+
+      {% if user == current_user %}
+        <a href="{{url_for('main.update_profile',uname=user.username)}}" class="btn btn-danger">Edit profile</a>
+      {% endif %}
+    </div>
+
+    <!-- Displaying profile photo -->
+    <div class="col-md-4">
+      {% if user.profile_pic_path %}
+        <img src="{{url_for('static',filename=user.profile_pic_path)}}" alt="" class="img-thumbnail">
+      {% else %}
+        <p>No profile picture</p>
+      {% endif %}
+
+      {% if user == current_user %}
+        <form action="{{url_for('main.update_pic',uname=user.username)}}" method="post" enctype="multipart/form-data">
+          <input type="file" name="photo" class="form-control"required>
+          <div class="text-center">
+            <input type="submit" class="btn btn-danger btn-lg">
+          </div>
+        </form>
+      {% endif %}
+
+    </div>
+  </div>
+
+  {% for pitch in pitches %}
+  <!-- <div class="row"> -->
+  <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+       <div class="panel">
        <div class="panel-body">
            <h2>{{ pitch.pitch_title }}</h2>
            <h4>{{ pitch.category}}</h4>
@@ -49,39 +79,8 @@
            <a href="/pitch_review/{{pitch.id}}" class="btn btn-primary">Comment</a>
          </div>
          </div>
-       </div> -->
-
-
-       <div class="card" style="width: 18rem;">
-          <div class="card-body">
-         
-            <h5 class="card-title">{{pitch.pitch_title}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{pitch.category}}</h6>
-            <p class="card-text">{{pitch.pitch_body}}</p>
-            <div class="text-center">
-                <div class="col-md-6">
-               <a href="/pitch_review/{{pitch.id}}?like=1" ><i   class="fas fa-thumbs-up"> {{pitch.like}}</i></a>
-              </div>
-              <div class="col-md-6">
-               <a href="/pitch_review/{{pitch.id}}?dislike=1"> <i  class="fas fa-thumbs-down">  {{ pitch.dislike}}</i></a>
-              </div>
-          </div>
-          <div class="card-footer">
-              <blockquote >
-                  <footer>Posted by:
-                    <cite > {{ pitch.user.username}}</cite>
-                    on
-                    <cite > {{ pitch.posted.strftime('%Y-%m-%d')}}</cite>
-                  </footer>
-                </blockquote>
-                <div class="text-center">
-                <a href="/pitch_review/{{pitch.id}}" class="btn btn-primary">Comment</a>
-              </div>
-
-          </div>
-        </div>
-
-
+       </div>
      </div>
    {% endfor %}
+
 {% endblock %}
